@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %} Reset password {% endblock %}
+{% block content %}
+<form method = 'POST'>
+    {% csrf_token %}
+    <div class="form-input">
+        <label for="email">Email address</label>
+        <input type="email" name="email" title="email">
+    </div>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
