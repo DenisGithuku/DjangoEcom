@@ -13,16 +13,21 @@ def login(request):
     if request.method =='POST':
         login_form = forms.UserLoginForm(request.POST)
         if login_form.is_valid():
-            
-            # check if the user is already in database
-            username = login_form.cleaned_data['username']
-            user = models.UserModel.objects.get(username=username)
 
-            # check if the user object is null or not
-            if (user.DoesNotExist is True):
-                return redirect('register')
+            username = login_form.cleaned_data['username']
+            password = login_form.cleaned_data['password']
+
+            # check if username or password is empty
+            if len(username) <= 0 or len(password) <= 0:
+                return HttpResponse("<script>alert('Details cannot be empty')</script>")
             else:
-                return redirect('home')
+                user = models.UserModel.objects.get(username=username)
+
+                # check if the user object is null or not
+                if (user.DoesNotExist is True):
+                    return redirect('register')
+                else:
+                    return redirect('home')
     else:
         login_form = forms.UserLoginForm()
     context = {
@@ -35,8 +40,14 @@ def register(request):
     if request.method == 'POST':
         register_form = forms.RegisterForm(request.POST)
         if register_form.is_valid():
-            register_form.save()            
-            return redirect('login')
+            password = register_form.cleaned_data['password']
+            if len(password) < 6:
+                return HttpResponse(
+                    "<script>alert('Password should not be less than 6 characters')</script>"
+                )
+            else:
+                register_form.save()            
+                return redirect('login')
     else:
         register_form = forms.RegisterForm()
 
@@ -68,7 +79,7 @@ def reset_password(request, email):
         if reset_password_form.is_valid():
             # strip password from the form
             password = reset_password_form.cleaned_data['password']
-
+            
             # get the user with the supplied email
             user = models.UserModel.objects.get(email=email)
             

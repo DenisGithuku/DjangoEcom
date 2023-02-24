@@ -4,6 +4,7 @@
 {% block content %}
 <div class="container">
 {% if login_form %}
+<div class="form-container">
 <form method="post">
     {% csrf_token %}
     <div class="form-input">
@@ -11,13 +12,16 @@
         <input type="text" name = "username" title="username">
     </div>
     <div class="form-input">
-        <label for="password">Password</label>
+        <label for="password">Password: </label>
         <input type="password" name="password" title="password">
     </div>
     <input type="submit" value="Login">
 </form>
 <span>Forgot password?
 <a href="{% url 'check_email' %}">Reset</a>
+<span>Or
+    <a href="{% url 'register' %}">Create account instead</a>
+</span>
 </span>
 {% endif %}
 </div>
